@@ -1,5 +1,3 @@
-task1和task2都已经经过sepolia测试网部署测试
-主要针对task3的操作进行说明
 # 单元测试
 ## 透明代理升级
 npx hardhat test ./test/auction-test.js

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Compatible with OpenZeppelin Contracts ^5.4.0
-pragma solidity ^0.8.28;
+pragma solidity ^0.8.20;
 /*
 ### ✅ 作业 1：ERC20 代币
 任务：参考 openzeppelin-contracts/contracts/token/ERC20/IERC20.sol实现一个简单的 ERC20 代币合约。要求：
@@ -17,10 +17,18 @@ pragma solidity ^0.8.28;
 */
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-contract TaskTwoErc20 is ERC20, Ownable {
+import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
+contract MyToken is ERC20, ERC20Permit, Ownable {
+    /*继承ERC20Permit
+    无 Gas 授权：用户无需发送链上交易进行授权，而是通过链下离线签名完成授权操作，完全避免了授权所需的 Gas 费用。
+    简化交易流程：将传统 ERC-20 需要的两次链上交易（先 approve 授权，再 transferFrom 转账）合并为一次交易，大大简化了操作流程。
+    提升用户体验：特别适合钱包中没有 ETH 的新手用户，无需先进行授权操作就能直接使用代币
+    */
 
     // 调用Ownable(msg.sender)，将代币合约的owner设为该代币合约的发型者
-    constructor () ERC20("TaskTwoErc20", "TTE") Ownable(msg.sender){
+    constructor (string memory name_, string memory symbol_) ERC20(name_, symbol_) ERC20Permit(name_) Ownable(msg.sender){
+        // 向部署者铸造1000个
+        _mint(msg.sender, 1000 * 10 ** 18);
     }
 
     //提供 mint 函数，仅允许合约所有者增发代币。

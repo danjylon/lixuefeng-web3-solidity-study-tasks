@@ -1,0 +1,16 @@
+const {ethers, deployments, getNamedAccounts} = require("hardhat")
+module.exports = async({getNamedAccounts, deployments}) => {
+    console.log("network.name: ", network.name)
+    const {firstAccount} = await getNamedAccounts()
+    const {deploy, log} = deployments
+
+    log("deploying NftAuctionFactory contract")
+    await deploy("NftAuctionFactory", {
+            contract: "NftAuctionFactory",
+            from: firstAccount, 
+            args: [], 
+            log: true, 
+        })
+    log("NftAuctionFactory deployed successfully")
+};
+module.exports.tags = ["factory", "factoryDeploy", "all", "v1", "v2", "sepolia"] 
